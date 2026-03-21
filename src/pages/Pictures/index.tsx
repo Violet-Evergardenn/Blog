@@ -38,9 +38,9 @@ export default function Pictures() {
         <button
           className="fixed bottom-8 right-8 z-[200] px-5 py-2.5 rounded-full font-bold text-sm tracking-wide transition-all duration-300 shadow-lg hover:scale-105 active:scale-95 backdrop-blur-sm"
           style={{
-            background: 'rgba(127,255,0,0.9)',
-            color: '#000',
-            border: '2px solid #000',
+            background: 'rgba(255,77,0,0.9)',
+            color: '#fff',
+            border: '2px solid #fff',
           }}
           onClick={() => setMode('wall')}
         >
