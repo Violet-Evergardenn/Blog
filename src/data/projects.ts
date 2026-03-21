@@ -1,0 +1,58 @@
+import type { Project } from '@/types'
+
+export const mockProjects: Project[] = [
+  {
+    id: '1',
+    name: 'Algo-Atlas',
+    year: 2025,
+    description: '100k+ views algorithm learning content',
+    tags: ['Starting Algorithms from Zero'],
+    icon: '📘',
+    websiteUrl: 'https://github.com',
+  },
+  {
+    id: '2',
+    name: 'X-Plore',
+    year: 2026,
+    description: "100W+ views personal blogs collection, my journey exploring the interesting 'X' in CS",
+    tags: ['Sharing'],
+    icon: '🔍',
+    websiteUrl: 'https://github.com',
+  },
+  {
+    id: '3',
+    name: 'nano-Json-RPC',
+    year: 2024,
+    description: 'A lightweight JSON-RPC implementation',
+    tags: ['C++'],
+    icon: '⚡',
+    websiteUrl: 'https://github.com',
+  },
+  {
+    id: '4',
+    name: 'boost-searcher',
+    year: 2024,
+    description: 'A search engine project',
+    tags: ['C++'],
+    icon: '🔎',
+    websiteUrl: 'https://github.com',
+  },
+  {
+    id: '5',
+    name: 'cpp-sandbox',
+    year: 2025,
+    description: '[code+note] C++ lib: stl, multimedia, net, UI, robotics...',
+    tags: ['awesome-cpp-lib'],
+    icon: '🧪',
+    websiteUrl: 'https://github.com',
+  },
+  {
+    id: '6',
+    name: 'linux-lab',
+    year: 2024,
+    description: '[code+note] csapp lab | linux-kernel | os+net...',
+    tags: ['C/C++', 'OS'],
+    icon: '🐧',
+    websiteUrl: 'https://github.com',
+  },
+]
