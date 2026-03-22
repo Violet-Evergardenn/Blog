@@ -24,6 +24,7 @@ export default function PhotoCard({ src, alt, description, width, height, left, 
   const overlayRef = useRef<HTMLDivElement>(null)
   const scanlineRef = useRef<HTMLDivElement>(null)
   const [isHovered, setIsHovered] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(false)
   
   // Generate a random ID for the brutalist aesthetic
   const [photoId] = useState(() => `IMG-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`)
@@ -95,14 +96,18 @@ export default function PhotoCard({ src, alt, description, width, height, left, 
       onClick={onClick}
     >
       {/* Image container */}
-      <div className="w-full h-full relative bg-zinc-900 overflow-hidden">
+      <div className="w-full h-full relative bg-zinc-900/50 overflow-hidden">
+        {/* Placeholder before load */}
+        <div 
+          className={`absolute inset-0 bg-zinc-800 animate-pulse transition-opacity duration-700 z-0 ${isLoaded ? 'opacity-0 invisible' : 'opacity-100'}`}
+        />
         <img
           ref={imageRef}
           src={src}
           alt={alt}
-          className="w-full h-full object-cover pointer-events-none"
+          onLoad={() => setIsLoaded(true)}
+          className={`w-full h-full object-cover pointer-events-none transition-opacity duration-700 ease-in-out z-10 relative ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
           draggable={false}
-          loading="lazy"
           style={{ 
             transformOrigin: 'center center',
           }}

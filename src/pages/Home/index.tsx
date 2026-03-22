@@ -1,87 +1,105 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { mockEssays } from '@/data'
-
-function useCurrentTime() {
-  const [time, setTime] = useState(new Date())
-  useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000)
-    return () => clearInterval(timer)
-  }, [])
-  return time
-}
-
-function getGreeting() {
-  const hour = new Date().getHours()
-  if (hour < 6) return 'LATE NIGHT'
-  if (hour < 12) return 'GOOD MORNING'
-  if (hour < 18) return 'GOOD AFTERNOON'
-  return 'GOOD EVENING'
-}
-
-function DigitalClock() {
-  const time = useCurrentTime()
-  const h = String(time.getHours()).padStart(2, '0')
-  const m = String(time.getMinutes()).padStart(2, '0')
-
-  return (
-    <div className="border-2 border-white/20 p-6 flex items-center justify-center">
-      <span className="text-display text-5xl text-brand tracking-widest">
-        {h}<span className="animate-pulse">:</span>{m}
-      </span>
-    </div>
-  )
-}
-
-function CalendarWidget() {
-  const now = useCurrentTime()
-  const year = now.getFullYear()
-  const month = now.getMonth()
-  const today = now.getDate()
-  const weekDay = ['日', '一', '二', '三', '四', '五', '六']
-
-  const firstDay = new Date(year, month, 1).getDay()
-  const daysInMonth = new Date(year, month + 1, 0).getDate()
-  const cells: (number | null)[] = Array(firstDay).fill(null)
-  for (let d = 1; d <= daysInMonth; d++) cells.push(d)
-
-  return (
-    <div className="border-2 border-white/20 p-5">
-      <p className="text-mono text-xs text-white/40 mb-3">
-        {year}/{month + 1}/{today} {weekDay[now.getDay()]}
-      </p>
-      <div className="grid grid-cols-7 gap-1 text-center text-mono text-xs">
-        {['一', '二', '三', '四', '五', '六', '日'].map((d) => (
-          <span key={d} className={`pb-1 ${d === '六' || d === '日' ? 'text-brand' : 'text-white/40'}`}>{d}</span>
-        ))}
-        {cells.map((d, i) => (
-          <span
-            key={i}
-            className={`py-0.5 ${
-              d === today
-                ? 'bg-brand text-black font-bold'
-                : d
-                  ? 'text-white/70'
-                  : ''
-            }`}
-          >
-            {d ?? ''}
-          </span>
-        ))}
-      </div>
-    </div>
-  )
-}
-
 export default function Home() {
   return (
-    <div className="min-h-screen">
+    <div className="h-screen overflow-hidden bg-brand relative">
       {/* ===== Hero Section ===== */}
-      <section className="min-h-screen bg-brand flex flex-col justify-between px-6 pt-20 pb-8 relative overflow-hidden">
-        <div className="flex-1 flex items-center">
-          <h1 className="text-display text-[16vw] text-black leading-[0.85] select-none">
+      <section className="h-full flex flex-col justify-between px-6 pt-20 pb-8 relative z-10">
+        <div className="flex-1 flex items-center justify-between w-full">
+          {/* Headline */}
+          <h1 className="text-display text-[13vw] text-black leading-[0.85] select-none shrink-0 pointer-events-none mt-10">
             IVY<br />NEKO
           </h1>
+
+          {/* Right Bento - Scattered Waterfall Layout */}
+          <div className="flex justify-between gap-5 w-[55vw] max-w-[800px] mr-2 md:mr-8 xl:mr-16 relative z-10 shrink-0 items-start">
+            
+            {/* Col 1: Live2D & Proj */}
+            <div className="flex-[1] flex flex-col gap-6 pt-20">
+              {/* Live2D Sys */}
+              <div className="h-[300px] border-[4px] border-black rounded-[2rem] bg-white shadow-[8px_8px_0_#000] hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[16px_16px_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-[0_0_0_#000] transition-all cursor-pointer flex flex-col items-center justify-between py-6 px-4 group overflow-hidden relative">
+                {/* Background Image Image */}
+                <div className="absolute inset-0 bg-cover bg-center transition-all duration-500 saturate-[0.8] contrast-125 sepia-[0.3] group-hover:saturate-100 group-hover:contrast-100 group-hover:sepia-0" style={{ backgroundImage: 'url(/home-img/live2d.jpg)' }}></div>
+                {/* Light overlay to make text readable */}
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500"></div>
+
+                <div className="w-full flex justify-end z-10">
+                  <div className="w-5 h-5 bg-brand border-2 border-black rounded-full animate-pulse"></div>
+                </div>
+                
+                <div className="flex-1 flex items-end justify-center w-full z-10 pb-4">
+                  <div className="bg-white/90 border-[3px] border-black rounded-xl px-3 py-2 transform group-hover:-rotate-3 transition-transform">
+                    <span className="text-black font-black text-3xl tracking-wide uppercase">
+                      LIVE2D
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* PROJ */}
+              <div className="h-[140px] border-[4px] border-black rounded-[2rem] bg-black shadow-[8px_8px_0_#000] hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[16px_16px_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-[0_0_0_#000] transition-all flex justify-center items-center cursor-pointer group -rotate-2">
+                <span className="text-white font-black text-2xl tracking-widest group-hover:text-brand transition-colors">PROJ</span>
+              </div>
+            </div>
+
+            {/* Col 2: Gallery, About, Music */}
+            <div className="flex-[2.2] flex flex-col gap-6">
+              {/* Gallery */}
+              <div className="h-[110px] border-[4px] border-black rounded-[2rem] bg-black shadow-[8px_8px_0_#000] hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[16px_16px_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-[0_0_0_#000] transition-all cursor-pointer flex items-center justify-between px-6 group overflow-hidden relative rotate-1 z-10">
+                {/* Background Image */}
+                <div className="absolute inset-0 bg-cover opacity-80 group-hover:opacity-100 transition-all duration-500 bg-[center_10%]" style={{ backgroundImage: 'url(/home-img/gallery.jpg)' }}></div>
+                {/* Yellow overlay that fades on hover */}
+                <div className="absolute inset-0 bg-[#FACC15] mix-blend-multiply group-hover:opacity-0 transition-opacity duration-500"></div>
+
+                <span className="text-white font-black text-3xl z-10 drop-shadow-[2px_2px_0_#000] tracking-wider">GALLERY</span>
+                <div className="w-12 h-12 border-[3px] border-black rounded-full flex items-center justify-center z-10 bg-white group-hover:bg-brand transition-colors shrink-0">
+                  <svg className="w-6 h-6 text-black group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </div>
+              </div>
+
+              {/* About Me */}
+              <div className="h-[350px] border-[4px] border-black rounded-[2rem] bg-white shadow-[8px_8px_0_#000] hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[16px_16px_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-[0_0_0_#000] transition-all cursor-pointer flex flex-col items-center justify-center group overflow-hidden relative">
+                <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: 'radial-gradient(black 2.5px, transparent 2.5px)', backgroundSize: '20px 20px' }}></div>
+                <div className="w-36 h-36 border-[4px] border-black rounded-full mb-6 bg-brand flex items-center justify-center overflow-hidden z-10 group-hover:scale-110 group-hover:rotate-6 transition-transform shadow-[4px_4px_0_#000]">
+                  <img src="/home-img/me.jpg" alt="Ivy Neko" className="w-full h-full object-cover transition-all duration-500" />
+                </div>
+                <span className="text-black font-black text-4xl uppercase tracking-wider z-10 bg-white px-3 py-1 border-[3px] border-black rounded-xl">ABOUT ME</span>
+              </div>
+
+              {/* Music */}
+              <div className="h-[110px] border-[4px] border-black rounded-[2rem] bg-white shadow-[8px_8px_0_#000] hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[16px_16px_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-[0_0_0_#000] transition-all cursor-pointer flex items-center justify-between px-6 overflow-hidden -rotate-1 z-10">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 border-[3px] border-black rounded-full flex items-center justify-center bg-brand pl-1 shrink-0">
+                    <svg className="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-black font-black text-lg whitespace-nowrap">NOW PLAYING</span>
+                    <span className="text-black/60 font-bold text-xs uppercase">BGM - Track 01</span>
+                  </div>
+                </div>
+                <div className="flex items-end gap-1.5 h-6 shrink-0">
+                  <div className="w-2 h-full bg-black animate-pulse"></div>
+                  <div className="w-2 h-2/3 bg-black animate-pulse" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-4/5 bg-black animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-2 h-1/2 bg-black animate-pulse" style={{ animationDelay: '0.3s' }}></div>
+                  <div className="w-2 h-full bg-brand animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Col 3: Links & Heart */}
+            <div className="flex-[1] flex flex-col gap-6 pt-10">
+              {/* Links */}
+              <div className="h-[280px] border-[4px] border-black rounded-[2rem] bg-black shadow-[8px_8px_0_#000] hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[16px_16px_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-[0_0_0_#000] transition-all cursor-pointer flex flex-col items-center justify-center gap-6 py-6 rotate-2 z-10">
+                <div className="text-brand font-black text-xl mb-1 tracking-wider" style={{ writingMode: 'vertical-rl' }}>LINKS</div>
+                <div className="w-14 h-14 border-[3px] border-black rounded-full flex items-center justify-center bg-white hover:bg-brand hover:scale-110 hover:-rotate-12 transition-all text-black font-black text-lg shrink-0">GH</div>
+                <div className="w-14 h-14 border-[3px] border-black rounded-full flex items-center justify-center bg-white hover:bg-brand hover:scale-110 hover:rotate-12 transition-all text-black font-black text-lg shrink-0">BL</div>
+              </div>
+
+              {/* Heart */}
+              <div className="h-[140px] border-[4px] border-black rounded-[2rem] bg-brand shadow-[8px_8px_0_#000] hover:-translate-y-2 hover:-translate-x-2 hover:shadow-[16px_16px_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-[0_0_0_#000] transition-all cursor-pointer flex items-center justify-center group overflow-hidden relative -rotate-3 z-10">
+                <svg className="w-14 h-14 text-black group-hover:scale-125 group-hover:text-white transition-transform z-10" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="border-t-2 border-black pt-6 flex items-end justify-between">
@@ -121,37 +139,27 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== Skewed Marquee Section ===== */}
-      <section className="bg-black py-12" style={{ transform: 'skewY(-3deg)', margin: '-2rem 0' }}>
-        <div>
-          <div className="overflow-hidden whitespace-nowrap mb-2">
-            <div className="animate-marquee inline-flex">
-              <span className="text-display text-[10vw] text-brand leading-none">WELCOME TO MY WORLD • CREATIVE CODER • OPEN SOURCE LOVER •&nbsp;</span>
-              <span className="text-display text-[10vw] text-brand leading-none">WELCOME TO MY WORLD • CREATIVE CODER • OPEN SOURCE LOVER •&nbsp;</span>
+      {/* ===== Skewed Marquee Section (Absolute overlay) ===== */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-20">
+        <section 
+          className="absolute left-[-2%] right-[-2%] w-[104%] bg-black pointer-events-auto" 
+          style={{ 
+            top: 'calc(100vh + 1rem)', 
+            height: '100vh', 
+            transform: 'skewY(-6deg)', 
+            transformOrigin: 'top left' 
+          }}
+        >
+          <div className="w-full pt-1 pb-4">
+            <div className="overflow-hidden whitespace-nowrap">
+              <div className="animate-marquee inline-flex">
+                <span className="text-display text-[6.5vw] font-black text-brand leading-none tracking-widest hover:text-white transition-colors duration-300">WELCOME TO MY WORLD • CREATIVE CODER • OPEN SOURCE LOVER • BLOG • CODE • ANIME • EXPLORE • SHARE • BUILD •&nbsp;</span>
+                <span className="text-display text-[6.5vw] font-black text-brand leading-none tracking-widest hover:text-white transition-colors duration-300">WELCOME TO MY WORLD • CREATIVE CODER • OPEN SOURCE LOVER • BLOG • CODE • ANIME • EXPLORE • SHARE • BUILD •&nbsp;</span>
+              </div>
             </div>
           </div>
-          <div className="overflow-hidden whitespace-nowrap">
-            <div className="animate-marquee-reverse inline-flex">
-              <span className="text-display text-[10vw] text-white/80 leading-none">BLOG • CODE • ANIME • EXPLORE • SHARE • BUILD •&nbsp;</span>
-              <span className="text-display text-[10vw] text-white/80 leading-none">BLOG • CODE • ANIME • EXPLORE • SHARE • BUILD •&nbsp;</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== Content Below ===== */}
-      <section className="bg-black px-6 py-20">
-        <div className="max-w-5xl mx-auto">
-          <div className="border-t border-white/20 pt-8 mb-16">
-            <h2 className="text-display text-4xl text-white mb-8">LATEST</h2>
-            <p className="text-mono text-sm text-white/60">文章区块 — 待开发</p>
-          </div>
-          <div className="border-t border-white/20 pt-8">
-            <h2 className="text-display text-4xl text-white mb-8">FEATURED</h2>
-            <p className="text-mono text-sm text-white/60">推荐区块 — 待开发</p>
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   )
 }

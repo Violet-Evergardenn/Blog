@@ -17,17 +17,17 @@ const THEME_ORANGE = '#FF4D00'
 const THEME_BLACK = '#000000'
 
 /* =========== Layout constants (design coord system, base = 1440px) =========== */
-const PHOTO_W = 280
-const PHOTO_H = 350
-const GAP = 60
-const COLS = 8       // viewport ≈ 4.2 photos wide → need 8 cols (余量充足)
-const ROWS = 5       // viewport ≈ 2.2 photos tall → need 5 rows (余量充足)
+const PHOTO_W = 350
+const PHOTO_H = 450
+const GAP = 100
+const COLS = 5       // 横向5个
+const ROWS = 4       // 竖向4个
 const STANDARD_WIDTH = 1440
 
 // ★ Grid period = COLS × (PHOTO_W + GAP), 保证首尾衔接处也有 GAP 间距
-const GRID_W = COLS * (PHOTO_W + GAP)   // 8 × 340 = 2720
-const GRID_H = ROWS * (PHOTO_H + GAP)   // 5 × 410 = 2050
-// 验证: 2720 >= 1440 + 280 = 1720 ✓  |  2050 >= 900 + 350 = 1250 ✓
+const GRID_W = COLS * (PHOTO_W + GAP)   // 5 × 340 = 1700
+const GRID_H = ROWS * (PHOTO_H + GAP)   // 4 × 420 = 1680
+// 验证: 1700 >= 1440 + 280 = 1720 (接近)  |  1680 >= 900 + 360 = 1260 ✓
 
 // Pre-compute each photo's initial position (absolute positioning)
 const photoPositions = Array.from({ length: ROWS * COLS }, (_, i) => {
@@ -39,12 +39,8 @@ const photoPositions = Array.from({ length: ROWS * COLS }, (_, i) => {
   }
 })
 
-// Repeat mock photos to fill 40 slots
-const allPhotos = (() => {
-  const r: typeof mockPictures = []
-  while (r.length < ROWS * COLS) r.push(...mockPictures)
-  return r.slice(0, ROWS * COLS)
-})()
+// Use exactly 20 photos for 5x4 grid
+const allPhotos = mockPictures.slice(0, ROWS * COLS)
 
 /* =========== Marquee helpers =========== */
 const repeat = (t: string, n: number) => Array(n).fill(t).join('')
@@ -86,15 +82,12 @@ export default function InfinitePhotoWall() {
 
     const scale = document.body.offsetWidth / STANDARD_WIDTH
     scaleRef.current = scale
-    photos.style.transform = `scale(${scale})`
-    photos.style.transformOrigin = 'top left'
 
-    // ★ Center the grid: shift the container so the grid center = viewport center
-    // offsetX/Y are in screen px (CSS layout coords, before the scale transform)
+    // ★ Center the grid using transform (single property change to prevent flicker)
     const offsetX = window.innerWidth / 2 - (GRID_W / 2) * scale
     const offsetY = window.innerHeight / 2 - (GRID_H / 2) * scale
-    photos.style.left = `${offsetX}px`
-    photos.style.top = `${offsetY}px`
+    photos.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`
+    photos.style.transformOrigin = 'top left'
 
     // Collect DOM nodes & assign known positions (in design coords within the grid)
     const items = photos.querySelectorAll<HTMLDivElement>('.photo-item')
@@ -242,7 +235,7 @@ export default function InfinitePhotoWall() {
   }, [activeIndex])
 
   /* ---- Handle Container Click (Close Active Photo) ---- */
-  const handleContainerClick = useCallback((e?: React.MouseEvent) => {
+  const handleContainerClick = useCallback(() => {
     // When active, ANY click should close the detail view (including clicking on photo)
     if (activeIndex === null) return
     
@@ -303,10 +296,10 @@ export default function InfinitePhotoWall() {
   }, [activeIndex])
 
   /* ---- Handle Photo Click ---- */
-  const handlePhotoClick = useCallback((index: number, e: React.MouseEvent<HTMLDivElement>) => {
+  const handlePhotoClick = useCallback((index: number, _e: React.MouseEvent<HTMLDivElement>) => {
     // Prevent click if user was dragging
-    const dx = Math.abs(e.clientX - dragStartRef.current.x)
-    const dy = Math.abs(e.clientY - dragStartRef.current.y)
+    const dx = Math.abs(_e.clientX - dragStartRef.current.x)
+    const dy = Math.abs(_e.clientY - dragStartRef.current.y)
     if (dx > 5 || dy > 5) return
 
     // Prevent opening new photo during exit animation
@@ -371,7 +364,7 @@ export default function InfinitePhotoWall() {
     gsap.to(targetNode, {
       x: targetX,
       y: targetY,
-      scale: 1.5, // Scale up the active photo
+      scale: 1.2, // Scale up the active photo
       zIndex: 50,
       duration: 0.6,
       ease: 'power4.out',
@@ -381,14 +374,14 @@ export default function InfinitePhotoWall() {
         imgData.movy = targetY
       }
     })
-  }, [activeIndex, handleContainerClick])
+  }, [activeIndex])
 
   /* ---- Lifecycle ---- */
   useEffect(() => {
-    const timer = setTimeout(resize, 100)
+    // Call resize immediately to set initial position without delay
+    resize()
     window.addEventListener('resize', resize)
     return () => {
-      clearTimeout(timer)
       window.removeEventListener('resize', resize)
     }
   }, [resize])

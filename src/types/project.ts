@@ -6,4 +6,5 @@ export interface Project {
   tags: string[]
   icon: string
   websiteUrl: string
+  githubUrl?: string
 }
