@@ -19,7 +19,10 @@ export default function Navbar() {
   return (
     <nav className="fixed top-4 left-0 right-0 z-50 flex items-center justify-between px-6">
       {/* Left: Logo */}
-      <NavLink to="/" className="text-mono text-sm font-bold text-white hover:text-brand transition-colors duration-150">
+      <NavLink 
+        to="/" 
+        className="text-mono text-sm font-bold text-white px-3 py-1.5 rounded-full border border-transparent hover:bg-white hover:text-black transition-all duration-150"
+      >
         IVY-NEKO
       </NavLink>
 
@@ -44,14 +47,14 @@ export default function Navbar() {
       </div>
 
       {/* Right: Social links */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         {socialLinks.map((link) => (
           <a
             key={link.label}
             href={link.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-mono text-xs text-white/60 hover:text-brand transition-colors duration-150"
+            className="text-mono text-xs text-white/60 px-2 py-1.5 rounded hover:bg-white hover:!text-black transition-all duration-150"
           >
             {link.label}
           </a>

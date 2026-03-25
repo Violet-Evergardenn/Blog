@@ -1,13 +1,64 @@
+import { useEffect, useRef } from 'react'
+import gsap from 'gsap'
+
 export default function Home() {
+  const titleRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!titleRef.current) return
+
+    const chars = titleRef.current.querySelectorAll('.char')
+    
+    gsap.fromTo(chars, 
+      { 
+        y: 100, 
+        opacity: 0,
+        rotateX: -90
+      },
+      { 
+        y: 0, 
+        opacity: 1,
+        rotateX: 0,
+        duration: 0.8,
+        stagger: 0.05,
+        ease: 'back.out(1.7)',
+        delay: 0.3
+      }
+    )
+  }, [])
+
+  // 将文字拆分成单个字符
+  const renderAnimatedText = (text: string) => {
+    return text.split('').map((char, index) => (
+      <span 
+        key={index} 
+        className="char inline-block"
+        style={{ display: char === ' ' ? 'inline' : 'inline-block' }}
+      >
+        {char === ' ' ? '\u00A0' : char}
+      </span>
+    ))
+  }
+
   return (
     <div className="h-screen overflow-hidden bg-brand relative">
       {/* ===== Hero Section ===== */}
       <section className="h-full flex flex-col justify-between px-6 pt-20 pb-8 relative z-10">
         <div className="flex-1 flex items-center justify-between w-full">
           {/* Headline */}
-          <h1 className="text-display text-[13vw] text-black leading-[0.85] select-none shrink-0 pointer-events-none mt-10">
-            IVY<br />NEKO
-          </h1>
+          <div ref={titleRef} className="shrink-0 pointer-events-none mt-10" style={{ perspective: '1000px' }}>
+            <h1 className="text-display text-[13vw] text-black leading-[0.85] select-none">
+              <span className="block overflow-hidden">
+                {renderAnimatedText('IVY')}
+              </span>
+              <span className="block overflow-hidden">
+                {renderAnimatedText('NEKO')}
+              </span>
+            </h1>
+            <p className="text-mono text-sm md:text-base text-black/70 mt-4 tracking-wider text-center">
+              CREATIVE DEVELOPER & BLOGGER
+            </p>
+          </div>
 
           {/* Right Bento - Scattered Waterfall Layout */}
           <div className="flex justify-between gap-5 w-[55vw] max-w-[800px] mr-2 md:mr-8 xl:mr-16 relative z-10 shrink-0 items-start">
