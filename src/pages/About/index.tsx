@@ -1,6 +1,6 @@
 export default function About() {
   return (
-    <div className="h-screen w-full px-6 bg-black relative flex items-center justify-center overflow-hidden pt-16">
+    <div className="min-h-screen w-full px-4 md:px-6 bg-black relative flex items-center justify-center py-20 md:py-0">
       {/* Background */}
       <div 
         className="fixed inset-0 z-0 pointer-events-none opacity-20 bg-cover bg-center bg-no-repeat"
@@ -16,14 +16,14 @@ export default function About() {
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6 border-b-[4px] border-black pb-6 border-dashed">
             {/* Avatar */}
             <div className="w-32 h-32 md:w-40 md:h-40 border-[4px] border-black rounded-[2rem] overflow-hidden shrink-0 shadow-[8px_8px_0_#000] bg-brand rotate-3 hover:-rotate-3 transition-transform duration-300">
-              <img src="/home-img/me.jpg" alt="Ivy Neko" className="w-full h-full object-cover" />
+              <img src="/home-img/me.jpg" alt="Abstract Chip" className="w-full h-full object-cover" />
             </div>
             
             {/* Title & Short Bio */}
             <div className="text-center md:text-left flex-1">
-              <h1 className="text-display text-4xl md:text-6xl text-black leading-none mb-3 uppercase">Ivy Neko</h1>
+              <h1 className="text-display text-4xl md:text-6xl text-black leading-none mb-3 uppercase">Abstract Chip</h1>
               <div className="inline-block bg-black text-brand px-3 py-1 font-black text-xs md:text-sm tracking-widest uppercase mb-4 rounded-lg border-2 border-black rotate-1">
-                もしもし • System Online
+                ポテトチップ • System Online
               </div>
               
               <div className="space-y-2 text-black font-bold text-base md:text-lg leading-relaxed">
@@ -38,7 +38,7 @@ export default function About() {
              {/* Name Box */}
             <div className="border-[4px] border-black p-3 md:p-4 rounded-2xl bg-white shadow-[4px_4px_0_#000] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[6px_6px_0_#000] transition-all">
               <p className="text-[10px] md:text-xs font-black text-black/40 mb-1 tracking-widest">NAME</p>
-              <p className="font-black text-black text-lg md:text-xl">ivy-neko</p>
+              <p className="font-black text-black text-lg md:text-xl">abstract-chip</p>
             </div>
             {/* Location Box */}
             <div className="border-[4px] border-black p-3 md:p-4 rounded-2xl bg-white shadow-[4px_4px_0_#000] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[6px_6px_0_#000] transition-all">

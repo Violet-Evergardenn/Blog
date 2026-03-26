@@ -683,6 +683,55 @@ export default function Pictures() {
     )
   }
 
+  // 移动端网格布局
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+
+  if (isMobile) {
+    return (
+      <div className="min-h-screen bg-[#1c1c1c] px-4 pt-20 pb-10">
+        {/* 顶部标题 */}
+        <div className="mb-6 flex items-end justify-between border-b border-white/10 pb-4">
+          <h1 className="text-display text-4xl text-white tracking-tight">GALLERY</h1>
+          <button
+            className="px-3 py-1.5 rounded-full font-bold text-xs tracking-wide bg-brand text-white border border-white/30"
+            onClick={() => setMode('infinite')}
+          >
+            ∞ SCROLL
+          </button>
+        </div>
+
+        {/* 网格照片墙 */}
+        <div className="grid grid-cols-2 gap-3">
+          {photos.map((photo, i) => (
+            <div
+              key={photo.id}
+              className="cursor-pointer"
+              style={{
+                opacity: i < visibleCount ? 1 : 0,
+                transform: i < visibleCount ? 'scale(1)' : 'scale(0.8)',
+                transition: 'opacity 0.4s ease, transform 0.4s ease',
+              }}
+              onClick={() => setSelectedId(photo.id)}
+            >
+              <div className="bg-white" style={{ padding: '5px', paddingBottom: '22px', border: '2px solid #000', boxShadow: '4px 4px 0 #000' }}>
+                <div className="overflow-hidden bg-zinc-900 relative" style={{ height: '130px' }}>
+                  <img src={photo.src} alt={photo.title} className="w-full h-full object-cover" loading="lazy" />
+                </div>
+                <p className="text-[9px] text-center truncate px-1 mt-1.5 font-mono font-bold tracking-wider uppercase text-[#666]">
+                  {photo.title}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {selectedPhoto && (
+          <DetailView photo={selectedPhoto} onClose={() => setSelectedId(null)} />
+        )}
+      </div>
+    )
+  }
+
   return (
     <div 
       ref={containerRef}
