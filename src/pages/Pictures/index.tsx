@@ -39,13 +39,13 @@ function DetailView({ photo, onClose }: { photo: DetailPhoto; onClose: () => voi
       }}
       onClick={handleClose}
     >
-      {/* 背景遮罩 - 带淡入淡出 */}
+      {/* 背景遮罩 - 带淡入淡出
+          ⚠️ 去掉 backdropFilter: blur —— 它在每帧动画都要对整个背景做全屏模糊合成，
+          是弹窗入场/出场不丝滑的直接原因。改用纯黑半透明遮罩，视觉效果几乎一致。 */}
       <div 
         className="absolute inset-0"
         style={{
           background: 'rgba(0,0,0,0.92)',
-          backdropFilter: 'blur(4px)',
-          WebkitBackdropFilter: 'blur(4px)',
           animation: isClosing ? 'fadeOut 0.35s ease-out forwards' : 'fadeIn 0.35s ease-out',
         }}
       />
