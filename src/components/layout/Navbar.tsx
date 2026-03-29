@@ -7,7 +7,7 @@ const navLinks = [
   { to: '/projects', label: 'PROJECTS' },
   { to: '/about', label: 'ABOUT' },
   { to: '/pictures', label: 'GALLERY' },
-  { to: '/blogroll', label: 'LINKS' },
+  { to: '/live2d', label: 'LIVE2D' },
 ]
 
 const socialLinks = [
@@ -25,8 +25,13 @@ export default function Navbar() {
         {/* Left: Logo */}
         <NavLink
           to="/"
-          className="text-mono text-sm font-bold text-white px-3 py-1.5 rounded-full border border-transparent hover:bg-white hover:text-black transition-all duration-150"
+          className="text-mono text-sm font-bold text-white px-2 py-1.5 rounded-full border border-transparent hover:bg-white hover:text-black transition-all duration-150 inline-flex items-center gap-2"
         >
+          <img
+            src="/blog-img/blog-img-020.webp"
+            alt="AbstractChip logo"
+            className="w-6 h-6 rounded-full object-cover border border-white/30"
+          />
           ABSTRACT-CHIP
         </NavLink>
 
@@ -87,7 +92,14 @@ export default function Navbar() {
       >
         {/* 顶部关闭按钮 */}
         <div className="flex justify-between items-center px-6 pt-6 pb-4 border-b border-white/10">
-          <span className="text-mono text-sm font-bold text-white">ABSTRACT-CHIP</span>
+          <span className="text-mono text-sm font-bold text-white inline-flex items-center gap-2">
+            <img
+              src="/blog-img/blog-img-020.webp"
+              alt="AbstractChip logo"
+              className="w-6 h-6 rounded-full object-cover border border-white/30"
+            />
+            ABSTRACT-CHIP
+          </span>
           <button
             className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-150"
             onClick={() => setMenuOpen(false)}

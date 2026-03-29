@@ -28,7 +28,7 @@ export default function About() {
               
               <div className="space-y-2 text-black font-bold text-base md:text-lg leading-relaxed">
                 <p># Hi! ✨ 我是一名 <span className="bg-brand px-2 py-0.5 rounded border-2 border-black shadow-[2px_2px_0_#000]">CS 本科生</span>，热爱开源和编程。</p>
-                <p>喜欢探索算法、C++、Rust 的底层奥秘，也热衷于捕捉 Web 世界里那些极其有趣的<span className="bg-[#FACC15] text-black px-2 py-0.5 rounded border-2 border-black shadow-[2px_2px_0_#000]">粗野主义 'X'</span>。</p>
+                <p>现在网易参与agent开发<span className="bg-[#FACC15] text-black px-2 py-0.5 rounded border-2 border-black shadow-[2px_2px_0_#000]">向往睡懒觉，吃薯片，过死宅生活</span>。</p>
               </div>
             </div>
           </div>
@@ -48,7 +48,7 @@ export default function About() {
              {/* Skills Box */}
             <div className="border-[4px] border-black p-3 md:p-4 rounded-2xl bg-white shadow-[4px_4px_0_#000] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[6px_6px_0_#000] transition-all flex flex-col justify-center">
               <p className="text-[10px] md:text-xs font-black text-black/40 mb-1 tracking-widest">SKILLS</p>
-              <p className="font-black text-black text-xs md:text-sm uppercase leading-tight">C++ • Rust • React</p>
+              <p className="font-black text-black text-xs md:text-sm uppercase leading-tight">C++ • Ts • React</p>
             </div>
             {/* Status Box */}
             <div className="border-[4px] border-black p-3 md:p-4 rounded-2xl bg-brand shadow-[4px_4px_0_#000] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[6px_6px_0_#000] transition-all">
@@ -68,22 +68,22 @@ export default function About() {
                <div className="w-2 h-2 bg-brand rounded-full"></div>
             </div>
             <p className="font-bold text-base md:text-lg leading-relaxed tracking-wide z-10 relative">
-              "这个网站是我的个人博客。<br/>记录学习轨迹，分享硬核技术，整理造过的各种轮子和项目。<br/>
-              <span className="text-brand">Welcome to my Cyber Playground, let's build something cool! 🚀</span>"
+              "参与字节跳动高性能表格库 VTable 的开发，目前在网易参与内部 Agent 平台开发"。<br/>入选中国科学院软件研究所ospp、adventureX 三等奖、TRAE SOLO Hackathon 二等奖,acm铜。<br/>
+              <span className="text-brand">Welcome to my Cyber Playground, let's build something cool! </span>"
             </p>
           </div>
 
           {/* Action Links */}
           <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mt-0">
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer"
+            <a href="https://github.com/Violet2314" target="_blank" rel="noopener noreferrer"
               className="flex-1 border-[4px] border-black rounded-[1.25rem] bg-white hover:bg-[#FACC15] hover:text-black py-3 flex items-center justify-center gap-2 font-black text-black text-lg shadow-[6px_6px_0_#000] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-[0_0_0_#000] transition-all">
               ⬡ GITHUB
             </a>
-            <a href="https://bilibili.com" target="_blank" rel="noopener noreferrer"
+            <a href="https://space.bilibili.com/36595612?spm_id_from=333.1007.0.0" target="_blank" rel="noopener noreferrer"
               className="flex-1 border-[4px] border-black rounded-[1.25rem] bg-white hover:bg-[#FACC15] hover:text-black py-3 flex items-center justify-center gap-2 font-black text-black text-lg shadow-[6px_6px_0_#000] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-[0_0_0_#000] transition-all">
               ▶ BILIBILI
             </a>
-            <a href="mailto:hello@example.com"
+            <a href=""
               className="flex-1 border-[4px] border-black rounded-[1.25rem] bg-brand hover:bg-[#FF4D00] hover:text-white py-3 flex items-center justify-center gap-2 font-black text-black text-lg shadow-[6px_6px_0_#000] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0_#000] active:translate-y-0 active:translate-x-0 active:shadow-[0_0_0_#000] transition-all group">
               ✉ <span className="group-hover:scale-110 transition-transform">EMAIL ME</span>
             </a>

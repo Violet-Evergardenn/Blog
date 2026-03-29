@@ -1,31 +1,38 @@
-import { useEffect, useRef } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import React from 'react'
 import gsap from 'gsap'
 
 export default function Home() {
-  const titleRef = useRef<HTMLDivElement>(null)
+  const homeRootRef = useRef<HTMLDivElement>(null)
+  const introBaseDelay = 0.4
 
-  useEffect(() => {
-    if (!titleRef.current) return
+  useLayoutEffect(() => {
+    if (!homeRootRef.current) return
 
-    const chars = titleRef.current.querySelectorAll('.char')
-    
-    gsap.fromTo(chars, 
-      { 
-        y: 100, 
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReducedMotion) return
+
+    const ctx = gsap.context(() => {
+      const chars = gsap.utils.toArray<HTMLElement>('.hero-char')
+      if (!chars.length) return
+
+      gsap.set(chars, {
+        y: 280,
         opacity: 0,
-        rotateX: -90
-      },
-      { 
-        y: 0, 
+      })
+
+      gsap.to(chars, {
+        y: 0,
         opacity: 1,
-        rotateX: 0,
-        duration: 0.8,
-        stagger: 0.05,
-        ease: 'back.out(1.7)',
-        delay: 0.3
-      }
-    )
+        duration: 0.44,
+        stagger: 0.032,
+        ease: 'expo.out',
+        delay: introBaseDelay,
+        clearProps: 'transform,opacity'
+      })
+    }, homeRootRef)
+
+    return () => ctx.revert()
   }, [])
 
   // 将文字拆分成单个字符
@@ -33,7 +40,7 @@ export default function Home() {
     return text.split('').map((char, index) => (
       <span 
         key={index} 
-        className="char inline-block"
+        className="hero-char inline-block will-change-transform"
         style={{ display: char === ' ' ? 'inline' : 'inline-block' }}
       >
         {char === ' ' ? '\u00A0' : char}
@@ -44,21 +51,21 @@ export default function Home() {
   // �?CSS 卡片入场动画（避免与 transition-all 冲突�?
   const cardStyle = (index: number): React.CSSProperties => ({
     animation: `card-pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both`,
-    animationDelay: `${0.4 + index * 0.08}s`,
+    animationDelay: `${introBaseDelay + index * 0.08}s`,
   })
 
   return (
-    <div className="bg-brand relative">
+    <div ref={homeRootRef} className="bg-brand relative">
       {/* ===== Hero Section ===== */}
 
       {/* ---- 桌面端：原始 h-screen 单屏布局 ---- */}
       <section className="hidden md:flex h-screen flex-col justify-between px-6 pt-20 pb-8 relative z-10">
         <div className="flex-1 flex items-center justify-between w-full max-w-[1600px] mx-auto">
           {/* Headline */}
-          <div ref={titleRef} className="shrink-0 pointer-events-none mt-10" style={{ perspective: '1000px' }}>
+          <div className="shrink-0 pointer-events-none mt-10" style={{ perspective: '1000px' }}>
             <h1 className="text-display text-[13vw] text-black leading-[0.85] select-none">
-              <span className="block overflow-hidden">{renderAnimatedText('ART')}</span>
-              <span className="block overflow-hidden">{renderAnimatedText('CHIP')}</span>
+              <span className="hero-line block overflow-hidden">{renderAnimatedText('ART')}</span>
+              <span className="hero-line block overflow-hidden">{renderAnimatedText('CHIP')}</span>
             </h1>
             <p className="text-mono text-sm md:text-base text-black/70 mt-4 tracking-wider text-center">
               CREATIVE DEVELOPER & BLOGGER
@@ -168,10 +175,10 @@ export default function Home() {
       {/* ---- 移动端：单列垂直布局 ---- */}
       <section className="md:hidden flex flex-col px-4 pt-20 pb-10 gap-5 relative z-10">
         {/* 标题区 */}
-        <div ref={titleRef} className="pointer-events-none" style={{ perspective: '1000px' }}>
+        <div className="pointer-events-none" style={{ perspective: '1000px' }}>
           <h1 className="text-display text-[22vw] text-black leading-[0.85] select-none">
-            <span className="block overflow-hidden">{renderAnimatedText('ART')}</span>
-            <span className="block overflow-hidden">{renderAnimatedText('CHIP')}</span>
+            <span className="hero-line block overflow-hidden">{renderAnimatedText('ART')}</span>
+            <span className="hero-line block overflow-hidden">{renderAnimatedText('CHIP')}</span>
           </h1>
           <p className="text-mono text-xs text-black/70 mt-3 tracking-wider">
             CREATIVE DEVELOPER & BLOGGER

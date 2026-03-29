@@ -19,6 +19,8 @@ export default function ListCard({
   avatar,
   badge
 }: ListCardProps) {
+  const isImageIcon = Boolean(icon) && /^(https?:\/\/|\/|\.\/|\.\.\/)/.test(icon ?? '')
+
   return (
     <a 
       href={url} 
@@ -38,7 +40,15 @@ export default function ListCard({
           {/* Icon (for Projects) */}
           {icon && !avatar && (
             <div className="w-14 h-14 md:w-16 md:h-16 rounded-[1rem] border-[3px] border-black bg-brand flex items-center justify-center text-3xl md:text-4xl shrink-0 shadow-[4px_4px_0_#000] group-hover:rotate-12 group-hover:bg-[#FACC15] transition-all">
-              {icon}
+              {isImageIcon ? (
+                <img
+                  src={icon}
+                  alt={`${title} icon`}
+                  className="w-full h-full object-cover rounded-[0.65rem]"
+                />
+              ) : (
+                icon
+              )}
             </div>
           )}
           

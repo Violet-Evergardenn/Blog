@@ -261,20 +261,19 @@ const INITIAL_LAYOUTS = generateLayouts(photos.length)
 
 const loadInitialLayouts = (): PhotoPosition[] => {
   if (!STORAGE_KEY) return INITIAL_LAYOUTS
-  // 已按需求临时注释本地位置恢复逻辑；恢复时取消下方注释即可。
-  // if (typeof window === 'undefined') return INITIAL_LAYOUTS
-  //
-  // const saved = window.localStorage.getItem(STORAGE_KEY)
-  // if (!saved) return INITIAL_LAYOUTS
-  //
-  // try {
-  //   const parsed = JSON.parse(saved)
-  //   if (Array.isArray(parsed) && parsed.length === INITIAL_LAYOUTS.length) {
-  //     return parsed as PhotoPosition[]
-  //   }
-  // } catch {
-  //   // 解析失败使用默认位置
-  // }
+  if (typeof window === 'undefined') return INITIAL_LAYOUTS
+
+  const saved = window.localStorage.getItem(STORAGE_KEY)
+  if (!saved) return INITIAL_LAYOUTS
+
+  try {
+    const parsed = JSON.parse(saved)
+    if (Array.isArray(parsed) && parsed.length === INITIAL_LAYOUTS.length) {
+      return parsed as PhotoPosition[]
+    }
+  } catch {
+    // 解析失败使用默认位置
+  }
   return INITIAL_LAYOUTS
 }
 
@@ -315,7 +314,6 @@ const PhotoCard = memo(function PhotoCard({
   photo, index, pos, isDragging, isVisible, onMouseDown, onClickPhoto, hasDraggedRef, photoRefSetter,
 }: PhotoCardProps) {
   const [isHovered, setIsHovered] = useState(false)
-  void onMouseDown
 
   return (
     <div
@@ -339,8 +337,7 @@ const PhotoCard = memo(function PhotoCard({
         cursor: isDragging ? 'grabbing' : 'grab',
         pointerEvents: isVisible ? 'auto' : 'none',
       }}
-      // 已按需求临时注释拖拽入口；恢复时取消下一行注释即可。
-      // onMouseDown={(e) => onMouseDown(e, index)}
+      onMouseDown={(e) => onMouseDown(e, index)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => {
@@ -481,14 +478,13 @@ export default function Pictures() {
     }
   }, [])
 
-  // 已按需求临时注释位置持久化到 localStorage；恢复时取消整段注释即可。
-  // useEffect(() => {
-  //   const timeoutId = setTimeout(() => {
-  //     localStorage.setItem(STORAGE_KEY, JSON.stringify(positions))
-  //   }, 500) // 延迟 500ms 保存
-  //
-  //   return () => clearTimeout(timeoutId)
-  // }, [positions])
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(positions))
+    }, 500) // 延迟 500ms 保存
+
+    return () => clearTimeout(timeoutId)
+  }, [positions])
 
   // 照片逐个出现动画 - 使用单个 interval 代替 N 个 setTimeout
   useEffect(() => {
