@@ -85,7 +85,7 @@ export default function EssayDetail() {
       <div className="max-w-[1400px] mx-auto relative z-10 w-full flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
         
         {/* 左侧主要内文区域 */}
-        <div className="flex-1 w-full min-w-0 bg-white/5 border border-white/10 rounded-3xl p-6 md:p-12 lg:p-16 backdrop-blur-sm shadow-2xl relative overflow-hidden self-start">
+        <div className="flex-1 w-full min-w-0 bg-white/5 border border-white/10 rounded-3xl p-5 md:p-12 lg:p-16 backdrop-blur-sm shadow-2xl relative overflow-hidden self-start">
           
           {/* 文章头部 */}
           <div className="mb-10 pb-8 border-b-2 border-white/10">
@@ -184,12 +184,23 @@ export default function EssayDetail() {
         </div>
 
         {/* 右侧 Sticky 侧边栏 */}
-        <div className="w-full lg:w-[280px] shrink-0 sticky top-20 flex flex-col gap-6 self-start">
+        <div className="w-full lg:w-[280px] shrink-0 lg:sticky top-20 flex flex-col gap-6 self-start">
           
-          {/* 用户名片 - 精简版正方形大头像，强制宽度和下方内容一致 */}
-          <div className="w-full aspect-square bg-white border-[3px] border-black rounded-[2rem] shadow-[6px_6px_0_#FF4D00] transform transition-transform hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0_#FF4D00] p-2 group shrink-0">
+          {/* 用户名片 - 桌面端显示正方形大头像，移动端隐藏 */}
+          <div className="hidden lg:block w-full aspect-square bg-white border-[3px] border-black rounded-[2rem] shadow-[6px_6px_0_#FF4D00] transform transition-transform hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0_#FF4D00] p-2 group shrink-0">
             <div className="w-full h-full rounded-[1.5rem] overflow-hidden border-[3px] border-black relative bg-zinc-100 shadow-inner">
                <img src="/home-img/me.jpg" alt="Author" className="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-700 ease-out" />
+            </div>
+          </div>
+
+          {/* 移动端简化头部信息 */}
+          <div className="flex lg:hidden items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-4">
+            <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-brand shrink-0">
+              <img src="/home-img/me.jpg" alt="Author" className="w-full h-full object-cover" />
+            </div>
+            <div>
+              <p className="font-black text-white text-base">Abstract Chip</p>
+              <p className="text-white/40 text-xs font-mono mt-0.5">CREATIVE DEVELOPER</p>
             </div>
           </div>
 
