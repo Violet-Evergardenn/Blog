@@ -1,10 +1,13 @@
 import { useLayoutEffect, useRef } from 'react'
 import React from 'react'
 import gsap from 'gsap'
+import { useGlobalStore } from '@/stores/global'
 
 export default function Home() {
   const homeRootRef = useRef<HTMLDivElement>(null)
-  const introBaseDelay = 0.4
+  const bootComplete = useGlobalStore(state => state.bootComplete)
+  // 如果是刚刚完成 boot，给一个小延迟让过渡更平滑；如果早就完成了，直接执行
+  const introBaseDelay = typeof window !== 'undefined' && !sessionStorage.getItem('site_booted') ? 0.4 : 0.1
 
   useLayoutEffect(() => {
     if (!homeRootRef.current) return
@@ -12,14 +15,18 @@ export default function Home() {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (prefersReducedMotion) return
 
-    const ctx = gsap.context(() => {
-      const chars = gsap.utils.toArray<HTMLElement>('.hero-char')
-      if (!chars.length) return
+    const chars = gsap.utils.toArray<HTMLElement>('.hero-char')
+    if (!chars.length) return
 
-      gsap.set(chars, {
-        y: 280,
-        opacity: 0,
-      })
+    // 如果 Boot 还没完成，先重置英雄文字的初始隐藏状态，但不播放动画
+    if (!bootComplete) {
+      gsap.set(chars, { y: 280, opacity: 0 })
+      return
+    }
+
+    const ctx = gsap.context(() => {
+      // 确保从正确的初始状态开始，防止由于热更新或者其他重渲染导致的偏差
+      gsap.set(chars, { y: 280, opacity: 0 })
 
       gsap.to(chars, {
         y: 0,
@@ -33,7 +40,7 @@ export default function Home() {
     }, homeRootRef)
 
     return () => ctx.revert()
-  }, [])
+  }, [bootComplete, introBaseDelay])
 
   // 将文字拆分成单个字符
   const renderAnimatedText = (text: string) => {
@@ -48,11 +55,20 @@ export default function Home() {
     ))
   }
 
-  // �?CSS 卡片入场动画（避免与 transition-all 冲突�?
-  const cardStyle = (index: number): React.CSSProperties => ({
-    animation: `card-pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both`,
-    animationDelay: `${introBaseDelay + index * 0.08}s`,
-  })
+  // 控制 CSS 卡片入场动画，只有 boot 完成才开始播放
+  const cardStyle = (index: number): React.CSSProperties => {
+    if (!bootComplete) {
+      return {
+        opacity: 0,
+        transform: 'scale(0)'
+      }
+    }
+    
+    return {
+      animation: `card-pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both`,
+      animationDelay: `${introBaseDelay + index * 0.08}s`,
+    }
+  }
 
   return (
     <div ref={homeRootRef} className="bg-brand relative">

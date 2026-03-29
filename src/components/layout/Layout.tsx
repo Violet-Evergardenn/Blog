@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import { useEffect } from 'react'
 import Navbar from './Navbar'
+import BootScreen from '../ui/BootScreen'
 import { mockPictures } from '@/data'
 
 export default function Layout() {
@@ -31,6 +32,7 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-black">
+      <BootScreen />
       <Navbar />
       <main>
         <Outlet />
