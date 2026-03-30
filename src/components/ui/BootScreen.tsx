@@ -14,6 +14,9 @@ const generateBootLines = () => [
   'status: SYSTEM BOOT COMPLETE.',
 ]
 
+const ORANGE = '#FF6600'
+const ORANGE_DIM = '#FF6600BB'
+
 export default function BootScreen() {
   const [isBooting, setIsBooting] = useState(() => {
     if (typeof window === 'undefined') return false
@@ -24,8 +27,6 @@ export default function BootScreen() {
 
   useEffect(() => {
     if (!isBooting) return
-
-    // Prevent scrolling while boot screen is active
     document.body.style.overflow = 'hidden'
 
     const bootLines = generateBootLines()
@@ -43,28 +44,19 @@ export default function BootScreen() {
           return [...prev, nextLine]
         })
         currentLine++
-        // Randomize delay to simulate real loading behavior
         timeoutId = setTimeout(typeNextLine, Math.random() * 150 + 100)
       } else {
-        timeoutId = setTimeout(() => {
-          if (!active) return
-          setShowWelcome(true)
-        }, 200)
+        timeoutId = setTimeout(() => { if (active) setShowWelcome(true) }, 200)
         finishTimeoutId = setTimeout(() => {
           if (!active) return
           setIsBooting(false)
           sessionStorage.setItem('site_booted', '1')
-          setTimeout(() => {
-            useGlobalStore.getState().setBootComplete(true)
-          }, 800) // matches framer-motion exit duration
+          setTimeout(() => useGlobalStore.getState().setBootComplete(true), 800)
         }, 1600)
       }
     }
 
-    const startTimeout = setTimeout(() => {
-      typeNextLine()
-    }, 300)
-
+    const startTimeout = setTimeout(typeNextLine, 300)
     return () => {
       active = false
       clearTimeout(startTimeout)
@@ -79,71 +71,150 @@ export default function BootScreen() {
       {isBooting && (
         <motion.div
           key="bootscreen"
-          className="fixed inset-0 z-[99999] flex flex-col justify-center bg-black px-6 md:px-12 isolate overflow-hidden"
-          exit={{ 
-            y: '-100%', 
-            opacity: 0, 
-            filter: 'blur(10px)', 
-            transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } 
+          className="fixed inset-0 z-[99999] bg-black overflow-hidden"
+          exit={{
+            y: '-100%',
+            opacity: 0,
+            filter: 'blur(10px)',
+            transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] }
           }}
         >
-          {/* Terminal Background Layer */}
-          <FaultyTerminalBackground
-            scale={2.5}
-            scanlineIntensity={0.8}
-            glitchAmount={1.2}
-            tint="#FF4D00"
-            mouseReact={false}
-            brightness={0.4}
-            className="absolute inset-0 z-0 pointer-events-none opacity-50 mix-blend-screen"
-          />
+          {/* ══════════════════════════════════════════════
+              右侧 2/3：点阵波纹背景，仅覆盖右边区域
+          ══════════════════════════════════════════════ */}
+          <div className="absolute right-0 top-0 bottom-0 w-2/3 z-0">
+            <FaultyTerminalBackground
+              scale={2.5}
+              scanlineIntensity={0.8}
+              glitchAmount={1.2}
+              tint="#FF6600"
+              mouseReact={false}
+              brightness={0.8}
+              className="absolute inset-0 pointer-events-none opacity-50 mix-blend-screen"
+            />
+            {/* 右侧区域本身也是黑底 */}
+            <div className="absolute inset-0 bg-black -z-10" />
+          </div>
 
-          <div className="absolute inset-0 z-[1] pointer-events-none bg-gradient-to-b from-transparent via-black/40 to-black" />
+          {/* ══════════════════════════════════════════════
+              主布局：左 1/3 log区  |  竖线  |  右 2/3 标题区
+          ══════════════════════════════════════════════ */}
+          <div className="relative z-10 flex h-full w-full">
 
-          {/* Foreground Text Content */}
-          <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-start min-h-[50vh]">
-            <div className="space-y-2 md:space-y-3 w-full">
-              {lines.map((line, i) => {
-                const isOk = line.includes('[OK]')
-                const cleanLine = line.replace('[OK]', '')
-                return (
+            {/* ── 左栏 1/3：纯黑 + log 文字，整体居中 ── */}
+            <div className="w-1/3 shrink-0 flex flex-col justify-center items-center bg-black px-4">
+              {/* 内容块：固定宽度，保证文字左对齐且整体在左栏居中 */}
+              <div className="w-full max-w-[260px]">
+
+              {/* 顶部小标签 */}
+              <div className="mb-8 flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: ORANGE }} />
+                <span className="font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color: ORANGE }}>
+                  SYSTEM BOOT
+                </span>
+              </div>
+
+              {/* Log 行 */}
+              <div className="space-y-2 md:space-y-3">
+                {lines.map((line, i) => {
+                  const isOk = line.includes('[OK]')
+                  const cleanLine = line.replace('[OK]', '')
+                  return (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: -12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="flex items-baseline gap-2 font-mono uppercase"
+                      style={{ fontSize: 'clamp(9px, 1vw, 12px)', letterSpacing: '0.15em' }}
+                    >
+                      <span className="shrink-0" style={{ color: 'rgba(255,255,255,0.25)' }}>
+                        [{String(i * 127 + 1024).padStart(4, '0')}]
+                      </span>
+                      <span style={{ color: isOk ? 'rgba(255,255,255,0.7)' : ORANGE }}>
+                        {cleanLine}
+                      </span>
+                      {isOk && (
+                        <span className="font-black shrink-0" style={{ color: '#FFD700' }}>
+                          [OK]
+                        </span>
+                      )}
+                    </motion.div>
+                  )
+                })}
+
+                {/* 闪烁光标 */}
+                {!showWelcome && lines.length < 8 && (
                   <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="text-[11px] md:text-sm tracking-[0.1em] md:tracking-[0.2em] font-mono uppercase"
-                  >
-                    <span className="text-white/40 mr-3 md:mr-5">[{String(i * 127 + 1024).padStart(4, '0')}]</span>
-                    <span className={isOk ? 'text-white/80' : 'text-brand'}>
-                      {cleanLine}
-                    </span>
-                    {isOk && <span className="text-[#FACC15] ml-2">[OK]</span>}
-                  </motion.div>
-                )
-              })}
-              
-              {/* Blinking Cursor */}
-              {!showWelcome && lines.length < 8 && (
-                <div className="w-3 md:w-4 h-4 md:h-5 bg-brand animate-pulse mt-2" />
-              )}
-            </div>
+                    animate={{ opacity: [1, 0, 1] }}
+                    transition={{ repeat: Infinity, duration: 0.8 }}
+                    className="w-2 h-3 md:h-4 mt-1"
+                    style={{ backgroundColor: ORANGE }}
+                  />
+                )}
+              </div>
 
-            {/* Welcome Granted Block */}
-            {showWelcome && (
+              {/* 底部版本信息 */}
+              <div className="mt-8 pt-8 border-t border-white/10">
+                <p className="font-mono text-[9px] uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.2)' }}>
+                  ACG-KINETIC ENGINE v3.1.4
+                </p>
+              </div>
+
+              </div> {/* end max-w 内容块 */}
+            </div> {/* end 左栏 */}
+
+            {/* ── 竖线分割 ── */}
+            <div
+              className="w-px shrink-0 self-stretch"
+              style={{ backgroundColor: ORANGE, opacity: 0.6 }}
+            />
+
+            {/* ── 右栏 2/3：ACCESS GRANTED 大字，叠在点阵上 ── */}
+            <div className="flex-1 flex flex-col justify-center px-10 md:px-16">
               <motion.div
-                initial={{ opacity: 0, scale: 0.9, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ duration: 0.4, ease: 'easeOut' }}
-                className="mt-12 border-[3px] border-brand bg-brand/10 p-6 md:p-8 backdrop-blur-sm self-start inline-block"
+                initial={{ opacity: 0, y: 16 }}
+                animate={showWelcome ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               >
-                <h2 className="text-display text-4xl md:text-6xl text-white tracking-tighter leading-none mb-2">
-                  <span className="text-brand">ACCESS</span> GRANTED
+                <div className="w-12 h-[2px] mb-6" style={{ backgroundColor: ORANGE }} />
+
+                <h2 className="text-display leading-[0.88] tracking-tighter select-none">
+                  <span
+                    className="block font-black"
+                    style={{
+                      fontSize: 'clamp(4rem, 10vw, 10rem)',
+                      color: ORANGE,
+                      textShadow: showWelcome
+                        ? `0 0 40px ${ORANGE_DIM}, 0 0 80px ${ORANGE}44`
+                        : 'none',
+                    }}
+                  >
+                    ACCESS
+                  </span>
+                  <span
+                    className="block font-black text-white"
+                    style={{ fontSize: 'clamp(4rem, 10vw, 10rem)' }}
+                  >
+                    GRANTED
+                  </span>
                 </h2>
-                <p className="text-mono text-xs md:text-sm text-brand uppercase tracking-widest">
+
+                <p
+                  className="mt-6 font-mono text-xs md:text-sm uppercase tracking-[0.3em]"
+                  style={{ color: ORANGE }}
+                >
                   Welcome to the Kinetic Environment
                 </p>
+
+                <div className="mt-6 border-l-2 pl-4" style={{ borderColor: ORANGE }}>
+                  <span className="font-mono text-[10px] uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                    SYSTEM NOMINAL · ALL MODULES ACTIVE
+                  </span>
+                </div>
               </motion.div>
-            )}
+            </div>
+
           </div>
         </motion.div>
       )}
